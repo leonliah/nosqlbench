@@ -58,6 +58,13 @@
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.nosqlbench</groupId>
+      <artifactId>docsys</artifactId>
+      <version>3.12.2-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+
 
     <!--        <dependency>-->
     <!--            <groupId>javax.activation</groupId>-->

@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import io.nosqlbench.engine.api.metrics.IndicatorMode;
 import io.nosqlbench.engine.api.util.NosqlBenchFiles;
 import io.nosqlbench.engine.api.util.Unit;
+import io.nosqlbench.engine.core.script.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +17,10 @@ import java.util.stream.Collectors;
  * No CLI parser lib is useful for command structures, it seems. So we have this instead, which is good enough.
  * If something better is needed later, this can be replaced.
  */
-public class EBCLIOptions {
+public class NBCLIOptions {
 
     public static final String docoptFileName = "commandline.md";
-    private final static Logger logger = LoggerFactory.getLogger(EBCLIOptions.class);
+    private final static Logger logger = LoggerFactory.getLogger(NBCLIOptions.class);
 
     // Discovery
     private static final String HELP = "--help";
@@ -66,6 +67,10 @@ public class EBCLIOptions {
     private final static String LOG_LEVEL_OVERRIDE = "--log-level-override";
     private final static String ENABLE_CHART = "--enable-chart";
     private final static String DOCKER_METRICS = "--docker-metrics";
+    private static final String GRAALVM_ENGINE = "--graalvm";
+    private static final String NASHORN_ENGINE = "--nashorn";
+
+
 
     private static final Set<String> reserved_words = new HashSet<String>() {{
         addAll(
@@ -107,8 +112,9 @@ public class EBCLIOptions {
     private Map<String,Level> logLevelsOverrides = new HashMap<>();
     private boolean enableChart = false;
     private boolean dockerMetrics = false;
+    private Scenario.Engine engine = Scenario.Engine.Graalvm;
 
-    public EBCLIOptions(String[] args) {
+    public NBCLIOptions(String[] args) {
         parse(args);
     }
 
@@ -126,6 +132,14 @@ public class EBCLIOptions {
         while (arglist.peekFirst() != null) {
             String word = arglist.peekFirst();
             switch (word) {
+                case GRAALVM_ENGINE:
+                    engine = Scenario.Engine.Graalvm;
+                    arglist.removeFirst();
+                    break;
+                case NASHORN_ENGINE:
+                    engine = Scenario.Engine.Nashorn;
+                    arglist.removeFirst();
+                    break;
                 case SHOW_SCRIPT:
                     arglist.removeFirst();
                     showScript = true;
@@ -341,6 +355,10 @@ public class EBCLIOptions {
         List<LoggerConfig> configs = statsLoggerConfigs.stream().map(LoggerConfig::new).collect(Collectors.toList());
         checkLoggerConfigs(configs, LOG_STATS);
         return configs;
+    }
+
+    public Scenario.Engine getScriptingEngine() {
+        return engine;
     }
 
     public List<LoggerConfig> getClassicHistoConfigs() {

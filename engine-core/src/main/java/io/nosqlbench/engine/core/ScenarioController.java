@@ -23,6 +23,7 @@ import io.nosqlbench.engine.api.exceptions.BasicError;
 import io.nosqlbench.engine.api.metrics.ActivityMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.graalvm.polyglot.Value;
 
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -98,7 +99,9 @@ public class ScenarioController {
     public synchronized void run(String activityDefString) {
         run(Integer.MAX_VALUE, activityDefString);
     }
-
+    public synchronized  void run (Value v) {
+        System.out.println(v.getClass().getCanonicalName());
+    }
     public synchronized void run(ActivityDef activityDef) {
         run(Integer.MAX_VALUE, activityDef);
     }

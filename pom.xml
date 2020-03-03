@@ -21,12 +21,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <profiles>
-    <profile>
-      <id>coremodules</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
       <modules>
 
         <!-- COMMON MODULES -->
@@ -69,32 +63,8 @@
         <!-- An HTTP activity type -->
         <module>activitytype-http</module>
 
-      </modules>
-    </profile>
-
-    <profile>
-      <id>cqlmodules</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
         <module>activitytype-cql</module>
         <module>activitytype-cqlverify</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>virtdatamodules</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-
-        <!-- COMMON MODULES -->
-
-        <!-- Holds project level defaults -->
-        <module>mvn-defaults</module>
-        <module>docsys</module>
 
         <!-- VIRTDATA MODULES -->
 
@@ -114,11 +84,6 @@
         <module>virtdata-userlibs</module>
 
       </modules>
-
-    </profile>
-
-  </profiles>
-
 
   <licenses>
     <license>

@@ -1,22 +1,22 @@
 package io.nosqlbench.engine.cli;
 
+import io.nosqlbench.docsys.core.DocServerApp;
 import io.nosqlbench.engine.api.activityapi.core.ActivityType;
 import io.nosqlbench.engine.api.activityapi.cyclelog.outputs.cyclelog.CycleLogDumperUtility;
 import io.nosqlbench.engine.api.activityapi.cyclelog.outputs.cyclelog.CycleLogImporterUtility;
 import io.nosqlbench.engine.api.activityapi.input.InputType;
 import io.nosqlbench.engine.api.activityapi.output.OutputType;
+import io.nosqlbench.engine.api.metrics.ActivityMetrics;
 import io.nosqlbench.engine.core.MarkdownDocInfo;
 import io.nosqlbench.engine.core.ScenarioLogger;
 import io.nosqlbench.engine.core.ScenariosResults;
 import io.nosqlbench.engine.core.ShutdownManager;
-import io.nosqlbench.engine.docker.DockerMetricsHelper;
-import io.nosqlbench.engine.api.metrics.ActivityMetrics;
 import io.nosqlbench.engine.core.metrics.MetricReporters;
 import io.nosqlbench.engine.core.script.MetricsMapper;
 import io.nosqlbench.engine.core.script.Scenario;
 import io.nosqlbench.engine.core.script.ScenariosExecutor;
+import io.nosqlbench.engine.docker.DockerMetricsHelper;
 import io.nosqlbench.virtdata.userlibs.apps.VirtDataMainApp;
-import io.nosqlbench.docsys.core.DocServerApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +53,7 @@ public class NBCLI {
             System.exit(0);
         }
 
-        EBCLIOptions options = new EBCLIOptions(args);
+        NBCLIOptions options = new NBCLIOptions(args);
 
         if (options.wantsBasicHelp()) {
             System.out.println(loadHelpFile("commandline.md"));
@@ -161,13 +161,13 @@ public class NBCLI {
             }
         }
 
-        for (EBCLIOptions.LoggerConfig histoLogger : options.getHistoLoggerConfigs()) {
+        for (NBCLIOptions.LoggerConfig histoLogger : options.getHistoLoggerConfigs()) {
             ActivityMetrics.addHistoLogger(sessionName, histoLogger.pattern, histoLogger.file, histoLogger.interval);
         }
-        for (EBCLIOptions.LoggerConfig statsLogger : options.getStatsLoggerConfigs()) {
+        for (NBCLIOptions.LoggerConfig statsLogger : options.getStatsLoggerConfigs()) {
             ActivityMetrics.addStatsLogger(sessionName, statsLogger.pattern, statsLogger.file, statsLogger.interval);
         }
-        for (EBCLIOptions.LoggerConfig classicConfigs : options.getClassicHistoConfigs()) {
+        for (NBCLIOptions.LoggerConfig classicConfigs : options.getClassicHistoConfigs()) {
             ActivityMetrics.addClassicHistos(sessionName, classicConfigs.pattern, classicConfigs.file, classicConfigs.interval);
         }
 
@@ -182,8 +182,8 @@ public class NBCLI {
 
         ScenariosExecutor executor = new ScenariosExecutor("executor-" + sessionName, 1);
 
-        Scenario scenario = new Scenario(sessionName, options.getProgressSpec());
-        EBCLIScriptAssembly.ScriptData scriptData = EBCLIScriptAssembly.assembleScript(options);
+        Scenario scenario = new Scenario(sessionName, options.getProgressSpec(), options.getScriptingEngine());
+        NBCLIScriptAssembly.ScriptData scriptData = NBCLIScriptAssembly.assembleScript(options);
         if (options.wantsShowScript()) {
             System.out.println("// Rendered Script");
             System.out.println(scriptData.getScriptParamsAndText());
